@@ -1,0 +1,127 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Data files (large datasets)
+data/*/raw/*
+data/*/processed/*
+*.csv
+*.parquet
+*.h5
+*.hdf5
+# Keep README files in data directories
+!data/*/README*.md
+!data/README*.md
+
+# Model files
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.pt
+*.pth
+results/models/*
+
+# Results and outputs
+results/figures/*.png
+results/figures/*.jpg
+results/figures/*.pdf
+results/tables/*.csv
+# Keep example files
+!results/figures/.gitkeep
+!results/tables/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+*~
+.directory
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Documentation build
+docs/_build/
+docs/.doctrees/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Environment variables
+.env
+.env.local
+
+# Compiled extensions
+*.pyc
+
+# Distribution / packaging
+.Python
+*.so
+
+# Credentials (keep these private!)
+*.key
+*.pem
+credentials.json
+config/secrets.yml
+
+# Project-specific files (local only, not tracked)
+IMPLEMENTATION_PLAN.md
+claude.MD
