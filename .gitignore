@@ -59,6 +59,8 @@ data/*/processed/*
 # Keep README files in data directories
 !data/*/README*.md
 !data/README*.md
+# Keep entire benchmarks/results directory (small files, important for report)
+!benchmarks/results/**
 
 # Model files
 *.pkl
