@@ -9,6 +9,7 @@ import numpy as np
 from typing import Optional, Union
 from numpy.typing import ArrayLike
 from scipy.spatial import KDTree
+from joblib import Parallel, delayed
 
 
 class LOF:
@@ -30,6 +31,10 @@ class LOF:
     use_kdtree : bool, default=True
         Whether to use KD-Tree for k-NN search optimization.
         If True, complexity is O(n log n). If False, uses brute force O(n²).
+
+    n_jobs : int, default=1
+        Number of parallel jobs to run. -1 means using all processors.
+        Only affects LOF score computation, not k-NN search.
 
     Attributes
     ----------
@@ -55,11 +60,13 @@ class LOF:
         self,
         n_neighbors: int = 20,
         metric: str = 'euclidean',
-        use_kdtree: bool = True
+        use_kdtree: bool = True,
+        n_jobs: int = 1
     ):
         self.n_neighbors = n_neighbors
         self.metric = metric
         self.use_kdtree = use_kdtree
+        self.n_jobs = n_jobs
 
         # Attributes set during fit
         self.X_train_ = None
@@ -390,15 +397,29 @@ class LOF:
 
         # Step 6: Compute LOF scores
         n_samples = X.shape[0]
-        lof_scores = np.zeros(n_samples)
 
-        for i in range(n_samples):
-            # Average LRD of neighbors
-            neighbor_lrds = lrd[neighbors[i]]
-            avg_neighbor_lrd = np.mean(neighbor_lrds)
+        # Use parallelization if n_jobs > 1 or n_jobs == -1
+        if self.n_jobs != 1 and n_samples > 100:  # Only parallelize for larger datasets
+            def compute_single_lof(i):
+                neighbor_lrds = lrd[neighbors[i]]
+                avg_neighbor_lrd = np.mean(neighbor_lrds)
+                return avg_neighbor_lrd / (lrd[i] + 1e-10)
 
-            # LOF(i) = avg_neighbor_lrd / lrd(i)
-            lof_scores[i] = avg_neighbor_lrd / (lrd[i] + 1e-10)
+            lof_scores = np.array(
+                Parallel(n_jobs=self.n_jobs)(
+                    delayed(compute_single_lof)(i) for i in range(n_samples)
+                )
+            )
+        else:
+            # Sequential computation
+            lof_scores = np.zeros(n_samples)
+            for i in range(n_samples):
+                # Average LRD of neighbors
+                neighbor_lrds = lrd[neighbors[i]]
+                avg_neighbor_lrd = np.mean(neighbor_lrds)
+
+                # LOF(i) = avg_neighbor_lrd / lrd(i)
+                lof_scores[i] = avg_neighbor_lrd / (lrd[i] + 1e-10)
 
         return lof_scores
 
@@ -453,35 +474,73 @@ class LOF:
 
         # Compute LOF for new points
         n_samples = X.shape[0]
-        lof_scores = np.zeros(n_samples)
 
-        for i in range(n_samples):
-            # Compute reachability distances from new point to its neighbors
-            reach_dists = []
-            for j, neighbor_idx in enumerate(neighbors[i]):
-                if new_neighbor_dists is not None:
-                    # KD-Tree path
-                    dist_to_neighbor = new_neighbor_dists[i, j]
-                else:
-                    # Brute force path
-                    dist_to_neighbor = distances[i, neighbor_idx]
+        # Use parallelization if n_jobs > 1 or n_jobs == -1
+        if self.n_jobs != 1 and n_samples > 100:
+            def compute_single_new_lof(i):
+                # Compute reachability distances from new point to its neighbors
+                reach_dists = []
+                for j, neighbor_idx in enumerate(neighbors[i]):
+                    if new_neighbor_dists is not None:
+                        # KD-Tree path
+                        dist_to_neighbor = new_neighbor_dists[i, j]
+                    else:
+                        # Brute force path
+                        dist_to_neighbor = distances[i, neighbor_idx]
 
-                reach_dist = max(
-                    train_k_distances[neighbor_idx],
-                    dist_to_neighbor
+                    reach_dist = max(
+                        train_k_distances[neighbor_idx],
+                        dist_to_neighbor
+                    )
+                    reach_dists.append(reach_dist)
+
+                # LRD of new point
+                avg_reach_dist = np.mean(reach_dists)
+                lrd_new = 1.0 / (avg_reach_dist + 1e-10)
+
+                # Average LRD of neighbors
+                neighbor_lrds = train_lrd[neighbors[i]]
+                avg_neighbor_lrd = np.mean(neighbor_lrds)
+
+                # LOF score
+                return avg_neighbor_lrd / (lrd_new + 1e-10)
+
+            lof_scores = np.array(
+                Parallel(n_jobs=self.n_jobs)(
+                    delayed(compute_single_new_lof)(i) for i in range(n_samples)
                 )
-                reach_dists.append(reach_dist)
+            )
+        else:
+            # Sequential computation
+            lof_scores = np.zeros(n_samples)
 
-            # LRD of new point
-            avg_reach_dist = np.mean(reach_dists)
-            lrd_new = 1.0 / (avg_reach_dist + 1e-10)
+            for i in range(n_samples):
+                # Compute reachability distances from new point to its neighbors
+                reach_dists = []
+                for j, neighbor_idx in enumerate(neighbors[i]):
+                    if new_neighbor_dists is not None:
+                        # KD-Tree path
+                        dist_to_neighbor = new_neighbor_dists[i, j]
+                    else:
+                        # Brute force path
+                        dist_to_neighbor = distances[i, neighbor_idx]
 
-            # Average LRD of neighbors
-            neighbor_lrds = train_lrd[neighbors[i]]
-            avg_neighbor_lrd = np.mean(neighbor_lrds)
+                    reach_dist = max(
+                        train_k_distances[neighbor_idx],
+                        dist_to_neighbor
+                    )
+                    reach_dists.append(reach_dist)
 
-            # LOF score
-            lof_scores[i] = avg_neighbor_lrd / (lrd_new + 1e-10)
+                # LRD of new point
+                avg_reach_dist = np.mean(reach_dists)
+                lrd_new = 1.0 / (avg_reach_dist + 1e-10)
+
+                # Average LRD of neighbors
+                neighbor_lrds = train_lrd[neighbors[i]]
+                avg_neighbor_lrd = np.mean(neighbor_lrds)
+
+                # LOF score
+                lof_scores[i] = avg_neighbor_lrd / (lrd_new + 1e-10)
 
         return lof_scores
 

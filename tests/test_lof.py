@@ -259,6 +259,42 @@ class TestLOF:
         # Predictions should be identical
         assert_array_almost_equal(predictions_kdtree, predictions_brute)
 
+    def test_parallel_vs_sequential(self):
+        """Test that parallel computation produces same results as sequential"""
+        np.random.seed(789)
+        # Need >100 samples to trigger parallelization
+        X = np.random.randn(150, 3)
+
+        # Sequential
+        lof_seq = LOF(n_neighbors=10, n_jobs=1)
+        scores_seq = lof_seq.fit_predict(X)
+
+        # Parallel (2 jobs)
+        lof_par = LOF(n_neighbors=10, n_jobs=2)
+        scores_par = lof_par.fit_predict(X)
+
+        # Results should be identical
+        assert_allclose(scores_seq, scores_par, rtol=1e-10, atol=1e-10)
+
+    def test_parallel_predict(self):
+        """Test parallel computation with predict on new data"""
+        np.random.seed(999)
+        X_train = np.random.randn(120, 2)
+        X_test = np.random.randn(110, 2)
+
+        # Sequential
+        lof_seq = LOF(n_neighbors=5, n_jobs=1)
+        lof_seq.fit(X_train)
+        predictions_seq = lof_seq.predict(X_test, threshold=1.5)
+
+        # Parallel
+        lof_par = LOF(n_neighbors=5, n_jobs=2)
+        lof_par.fit(X_train)
+        predictions_par = lof_par.predict(X_test, threshold=1.5)
+
+        # Predictions should be identical
+        assert_array_almost_equal(predictions_seq, predictions_par)
+
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
