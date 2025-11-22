@@ -224,6 +224,41 @@ class TestLOF:
 
         assert_array_almost_equal(scores1, scores2)
 
+    def test_kdtree_vs_bruteforce(self):
+        """Test that KD-Tree optimization produces same results as brute-force"""
+        np.random.seed(123)
+        X = np.random.randn(50, 3)
+
+        # LOF with KD-Tree (default)
+        lof_kdtree = LOF(n_neighbors=10, use_kdtree=True)
+        scores_kdtree = lof_kdtree.fit_predict(X)
+
+        # LOF with brute-force
+        lof_brute = LOF(n_neighbors=10, use_kdtree=False)
+        scores_brute = lof_brute.fit_predict(X)
+
+        # Results should be nearly identical
+        assert_allclose(scores_kdtree, scores_brute, rtol=1e-5, atol=1e-8)
+
+    def test_kdtree_predict(self):
+        """Test KD-Tree optimization with predict on new data"""
+        np.random.seed(456)
+        X_train = np.random.randn(40, 2)
+        X_test = np.random.randn(10, 2)
+
+        # With KD-Tree
+        lof_kdtree = LOF(n_neighbors=5, use_kdtree=True)
+        lof_kdtree.fit(X_train)
+        predictions_kdtree = lof_kdtree.predict(X_test, threshold=1.5)
+
+        # Without KD-Tree
+        lof_brute = LOF(n_neighbors=5, use_kdtree=False)
+        lof_brute.fit(X_train)
+        predictions_brute = lof_brute.predict(X_test, threshold=1.5)
+
+        # Predictions should be identical
+        assert_array_almost_equal(predictions_kdtree, predictions_brute)
+
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
