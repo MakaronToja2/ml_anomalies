@@ -25,16 +25,17 @@ advancedAlgorithms/
 │   ├── algorithms/             # Implementacje algorytmów
 │   │   ├── lof.py             # Local Outlier Factor
 │   │   ├── pca_anomaly.py     # PCA dla detekcji anomalii
-│   │   └── isolation_forest.py # Isolation Forest (TODO)
+│   │   └── isolation_forest.py # Isolation Forest 
 │   ├── utils/                  # Narzędzia pomocnicze
 │   └── evaluation/             # Metryki i benchmarki
 ├── tests/                      # Testy jednostkowe
 │   ├── test_lof.py            # Testy LOF (13 testów)
 │   ├── test_pca.py            # Testy PCA (21 testów)
-│   └── test_isolation_forest.py # Testy IF (TODO)
+│   └── test_isolation_forest.py # Testy IF (13 testów)
+│   └── test_autoencoder.py # Testy auto_enkodera (10 testów)
 ├── notebooks/                  # Jupyter notebooks
 │   ├── raport2_basic_implementation.ipynb
-│   ├── raport3_extensions.ipynb (TODO)
+│   ├── raport3_extensions.ipynb
 │   └── raport4_final_analysis.ipynb (TODO)
 ├── data/                       # Zbiory danych
 │   ├── kdd_cup_99/
@@ -43,14 +44,9 @@ advancedAlgorithms/
 │   └── synthetic/
 ├── docs/                       # Dokumentacja i raporty
 │   ├── Raport1_Anomalia_ML.docx
-│   ├── Raport2_Anomalia_ML.docx (TODO)
+│   ├── Raport2_Anomalia_ML.docx 
 │   └── ...
-├── results/                    # Wyniki eksperymentów
-│   ├── figures/
-│   ├── tables/
-│   └── models/
 ├── requirements.txt            # Zależności
-├── IMPLEMENTATION_PLAN.md      # Plan implementacji
 └── README.md                   # Ten plik
 ```
 
@@ -219,5 +215,5 @@ Projekt edukacyjny - używaj dowolnie do celów edukacyjnych.
 
 ---
 
-**Ostatnia aktualizacja**: 2025-10-25
-**Status**: Raport 2 ukończony, Raport 3 w przygotowaniu
+**Ostatnia aktualizacja**: 2025-11-22
+**Status**: Raport 3 ukończony
