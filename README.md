@@ -21,33 +21,43 @@ Projekt zajmuje się kompleksową analizą metod detekcji anomalii w uczeniu mas
 
 ```
 advancedAlgorithms/
-├── src/                        # Kod źródłowy
-│   ├── algorithms/             # Implementacje algorytmów
-│   │   ├── lof.py             # Local Outlier Factor
-│   │   ├── pca_anomaly.py     # PCA dla detekcji anomalii
-│   │   └── isolation_forest.py # Isolation Forest 
-│   ├── utils/                  # Narzędzia pomocnicze
-│   └── evaluation/             # Metryki i benchmarki
-├── tests/                      # Testy jednostkowe
-│   ├── test_lof.py            # Testy LOF (13 testów)
-│   ├── test_pca.py            # Testy PCA (21 testów)
-│   └── test_isolation_forest.py # Testy IF (13 testów)
-│   └── test_autoencoder.py # Testy auto_enkodera (10 testów)
-├── notebooks/                  # Jupyter notebooks
+├── src/
+│   ├── algorithms/
+│   │   ├── lof.py                # LOF z KD-Tree i paralelizacją
+│   │   ├── isolation_forest.py   # Isolation Forest wrapper
+│   │   ├── pca_anomaly.py        # PCA anomaly detection
+│   │   └── autoencoder.py        # Autoencoder PyTorch
+│   ├── utils/
+│   │   └── data_loader.py        # Ładowanie zbiorów danych
+│   └── evaluation/
+│       └── metrics.py            # Metryki ewaluacji
+├── tests/
+│   ├── test_lof.py               # 17 testów LOF
+│   ├── test_isolation_forest.py  # 13 testów IF
+│   ├── test_autoencoder.py       # 10 testów AE
+│   └── test_pca.py               # 21 testów PCA
+├── notebooks/
 │   ├── raport2_basic_implementation.ipynb
-│   ├── raport3_extensions.ipynb
-│   └── raport4_final_analysis.ipynb (TODO)
-├── data/                       # Zbiory danych
-│   ├── kdd_cup_99/
-│   ├── credit_card/
-│   ├── breast_cancer/
-│   └── synthetic/
-├── docs/                       # Dokumentacja i raporty
-│   ├── Raport1_Anomalia_ML.docx
-│   ├── Raport2_Anomalia_ML.docx 
-│   └── ...
-├── requirements.txt            # Zależności
-└── README.md                   # Ten plik
+│   ├── raport3_performance_analysis.ipynb
+│   └── raport4_final_analysis.ipynb
+├── benchmarks/results/
+│   ├── raport2/                  # Wykresy z Raportu 2
+│   ├── raport3/                  # Wykresy z Raportu 3
+│   └── raport4/                  # Wykresy i CSV z Raportu 4
+│       ├── all_results.csv
+│       ├── summary_comparison.csv
+│       ├── f1_pivot.csv
+│       ├── f1_heatmap.png
+│       ├── roc_curves_all.png
+│       ├── execution_time.png
+│       └── confusion_matrices.png
+├── data/
+│   ├── kdd_cup_99/kddcup.data.gz
+│   └── credit_card/creditcard.csv
+└── docs/
+    ├── Raport2_Anomalia_ML_Template.md
+    ├── Raport3_Optymalizacja_Analiza.md
+    └── Raport4_Analiza_Porownawcza.md
 ```
 
 ## Instalacja
