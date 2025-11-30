@@ -252,51 +252,6 @@ Wyniki wizualne zapisano w katalogu `benchmarks/results/raport4/`:
 | Wizualizacje | Tak | Tak | 2, 3, 4 |
 
 **Wszystkie wymagania z Raportu 1 zostały zrealizowane.**
-
-
-### 6.3 Struktura finalna projektu
-
-```
-advancedAlgorithms/
-├── src/
-│   ├── algorithms/
-│   │   ├── lof.py                # LOF z KD-Tree i paralelizacją
-│   │   ├── isolation_forest.py   # Isolation Forest wrapper
-│   │   ├── pca_anomaly.py        # PCA anomaly detection
-│   │   └── autoencoder.py        # Autoencoder PyTorch
-│   ├── utils/
-│   │   └── data_loader.py        # Ładowanie zbiorów danych
-│   └── evaluation/
-│       └── metrics.py            # Metryki ewaluacji
-├── tests/
-│   ├── test_lof.py               # 17 testów LOF
-│   ├── test_isolation_forest.py  # 13 testów IF
-│   ├── test_autoencoder.py       # 10 testów AE
-│   └── test_pca.py               # 21 testów PCA
-├── notebooks/
-│   ├── raport2_basic_implementation.ipynb
-│   ├── raport3_performance_analysis.ipynb
-│   └── raport4_final_analysis.ipynb
-├── benchmarks/results/
-│   ├── raport2/                  # Wykresy z Raportu 2
-│   ├── raport3/                  # Wykresy z Raportu 3
-│   └── raport4/                  # Wykresy i CSV z Raportu 4
-│       ├── all_results.csv
-│       ├── summary_comparison.csv
-│       ├── f1_pivot.csv
-│       ├── f1_heatmap.png
-│       ├── roc_curves_all.png
-│       ├── execution_time.png
-│       └── confusion_matrices.png
-├── data/
-│   ├── kdd_cup_99/kddcup.data.gz
-│   └── credit_card/creditcard.csv
-└── docs/
-    ├── Raport2_Anomalia_ML_Template.md
-    ├── Raport3_Optymalizacja_Analiza.md
-    └── Raport4_Analiza_Porownawcza.md
-```
-
 ---
 
 ## 7. Bibliografia
