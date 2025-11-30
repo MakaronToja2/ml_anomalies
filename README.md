@@ -14,8 +14,8 @@ Projekt zajmuje się kompleksową analizą metod detekcji anomalii w uczeniu mas
 
 - ✅ **Raport 1**: Teoria i plan (UKOŃCZONY)
 - ✅ **Raport 2**: Implementacja podstawowa (UKOŃCZONY)
-- ⏳ **Raport 3**: Rozszerzenia i optymalizacja
-- ⏳ **Raport 4**: Analiza wyników i wnioski końcowe
+- ✅ **Raport 3**: Rozszerzenia i optymalizacja
+- ✅ **Raport 4**: Analiza wyników i wnioski końcowe
 
 ## Struktura projektu
 
